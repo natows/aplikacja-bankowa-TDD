@@ -8,9 +8,20 @@ class Konto:
         else:
             self.pesel = pesel
         if self.checkingPromotionCode(kod) and self.checkingAgebyPESEL(pesel):
-            self.saldo = 50
+            self.saldo = 50       
+       
 
     def checkingPromotionCode(self, code):
         return (code is not None and code[0:5] == "PROM_" and len(code)==8)
     def checkingAgebyPESEL(self,pesel):
         return  int(pesel[0:2]) > 60 or pesel[2]=="2" or pesel[2]=="3" #zakladajac ze nikt ponad setki nie dozyje
+    def outTransfer(self,kwota):
+        if self.saldo-kwota >= 0 :
+            self.saldo -= kwota
+        else: "Konto nie ma wystarczajacych srodkow"
+    def inTransfer(self,kwota):
+        self.saldo += kwota
+    def expressOutTransfer(self, kwota, oplata=1):
+        if self.saldo - kwota <0 :
+            "Konto nie ma wystarczających środków"
+        else: self.saldo -= (kwota + oplata)

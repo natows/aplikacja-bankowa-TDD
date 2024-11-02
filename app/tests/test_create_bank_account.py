@@ -1,5 +1,6 @@
 import unittest
 
+
 from ..Konto import Konto
 
 class TestCreateBankAccount(unittest.TestCase):
@@ -32,14 +33,14 @@ class TestCreateBankAccount(unittest.TestCase):
         pesel =" 12345678901"
         kod = "PROM_1234"
         pierwsze_konto=Konto(self.imie, self.nazwisko, pesel, kod)
-        self.assertEqual(pierwsze_konto.saldo, 0, "Promocja nie zostala naliczona")
+        self.assertEqual(pierwsze_konto.saldo, 0, "Promocja zostala naliczona po mimo złego kodu")
     def test_kod_promocyjny_zlyPoczatek(self): 
         pesel =" 12345678901"
         kod = "PRom_123"
         pierwsze_konto=Konto(self.imie, self.nazwisko, pesel, kod)
         self.assertEqual(pierwsze_konto.saldo, 0, "Promocja nie zostala naliczona")
     def test_wieku_dobry(self):
-        pesel = "33292929292"
+        pesel = "19292929292"
         kod = "PROM_124"
         pierwsze_konto = Konto(self.imie,self.nazwisko,pesel,kod)
         self.assertEqual(pierwsze_konto.saldo, 50, "Promocja nie zostala naliczona")
@@ -48,6 +49,21 @@ class TestCreateBankAccount(unittest.TestCase):
         kod = "PROM_124"
         pierwsze_konto = Konto(self.imie,self.nazwisko,pesel,kod)
         self.assertEqual(pierwsze_konto.saldo, 0, "Promocja nie zostala naliczona")
+    def test_wiek_dobry_zly_kod(self):
+        pesel = "77092929292"
+        kod = "PROM_124ff"
+        pierwsze_konto = Konto(self.imie,self.nazwisko,pesel,kod)
+        self.assertEqual(pierwsze_konto.saldo, 0, "Promocja nie zostala naliczona")
+    def test_wiek_zly_zly_kod(self):
+        pesel = "33092929292"
+        kod = "PROM_124ff"
+        pierwsze_konto = Konto(self.imie,self.nazwisko,pesel,kod)
+        self.assertEqual(pierwsze_konto.saldo, 0, "Promocja nie zostala naliczona")
+
+
+
+        
+
 
 
 
