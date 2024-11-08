@@ -8,7 +8,8 @@ class Konto:
         else:
             self.pesel = pesel
         if self.checkingPromotionCode(kod) and self.checkingAgebyPESEL(pesel):
-            self.saldo = 50       
+            self.saldo = 50     
+        self.historia = []  
             
 
     def checkingPromotionCode(self, code):
@@ -18,8 +19,12 @@ class Konto:
     def outTransfer(self,kwota):
         if self.saldo-kwota >= 0 :
             self.saldo -= kwota
+            self.historia.append(-kwota)
     def inTransfer(self,kwota):
         self.saldo += kwota
+        self.historia.append(kwota)
     def expressOutTransfer(self, kwota, oplata=1):
         if self.saldo - kwota >=0 :
             self.saldo -= (kwota + oplata)
+            self.historia.append(-kwota)
+            self.historia.append(-oplata)
