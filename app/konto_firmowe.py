@@ -7,6 +7,7 @@ class KontoFirma(Konto):
             self.nip = "Niepoprawny NIP"
         else: self.nip = nip
         self.saldo = 0
+        self.historia = []
     def outTransfer(self, kwota):
         return super().outTransfer(kwota)
     def inTransfer(self, kwota):
