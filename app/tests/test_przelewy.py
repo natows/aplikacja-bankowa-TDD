@@ -73,13 +73,13 @@ class Przelewy(unittest.TestCase):
         konto.inTransfer(500)
         konto.outTransfer(150)
         konto.expressOutTransfer(250)
-        self.assertEqual(konto.historia, [500,-150,-250,-1], "Historia sie nie zgadza")
+        self.assertEqual(konto.history, [500,-150,-250,-1], "history sie nie zgadza")
     def test_konto_firmowe(self):
         konto=KontoFirma(self.nazwa, self.nip)
         konto.inTransfer(500)
         konto.outTransfer(150)
         konto.expressOutTransfer(250)
-        self.assertEqual(konto.historia, [500,-150,-250,-5], "Historia sie nie zgadza")
+        self.assertEqual(konto.history, [500,-150,-250,-5], "history sie nie zgadza")
 
 
 

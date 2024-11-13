@@ -6,49 +6,49 @@ from ..Konto import Konto
 from ..konto_firmowe import KontoFirma
 
 class TestCreateBankAccount(unittest.TestCase):
-    imie = 'Dariusz'
-    nazwisko = "Januszewski"
+    name = 'Dariusz'
+    surname = "Januszewski"
     pesel="12345678901"
     nazwa="spolka sp. z.o.o"
     nip = 1234567890
 
     def test_tworzenie_konta(self):
-        pierwsze_konto = Konto(self.imie, self.nazwisko, self.pesel)
-        self.assertEqual(pierwsze_konto.imie, self.imie, "Imie nie zostało zapisane!")
-        self.assertEqual(pierwsze_konto.nazwisko, self.nazwisko, "Nazwisko nie zostało zapisane!")
+        pierwsze_konto = Konto(self.name, self.surname, self.pesel)
+        self.assertEqual(pierwsze_konto.name, self.name, "name nie zostało zapisane!")
+        self.assertEqual(pierwsze_konto.surname, self.surname, "surname nie zostało zapisane!")
         self.assertEqual(pierwsze_konto.saldo, 0, "Saldo nie jest zerowe!")
         self.assertEqual(pierwsze_konto.pesel, self.pesel, "Pesel nie został zapisany")
 
 
     def test_za_dlugi_pesel(self):
         pesel = "123435674647632"
-        pierwsze_konto = Konto(self.imie, self.nazwisko, pesel)
+        pierwsze_konto = Konto(self.name, self.surname, pesel)
         self.assertEqual(pierwsze_konto.pesel, "Niepoprawny pesel", "Pesel nie zostal zapisany")
     def test_zbyt_krotki_pesel(self):
         pesel = "1234"
-        pierwsze_konto = Konto(self.imie, self.nazwisko, pesel)
+        pierwsze_konto = Konto(self.name, self.surname, pesel)
         self.assertEqual(pierwsze_konto.pesel, "Niepoprawny pesel", "Pesel nie zostal zapisany")
     def test_kod_promocyjny_poprawny(self): 
         kod = "PROM_123"
-        pierwsze_konto=Konto(self.imie, self.nazwisko, self.pesel, kod)
+        pierwsze_konto=Konto(self.name, self.surname, self.pesel, kod)
         self.assertEqual(pierwsze_konto.saldo, 50, "Promocja nie zostala naliczona")
     def test_kod_promocyjny_zaDlugikoniec(self): 
         kod = "PROM_1234"
-        pierwsze_konto=Konto(self.imie, self.nazwisko, self.pesel, kod)
+        pierwsze_konto=Konto(self.name, self.surname, self.pesel, kod)
         self.assertEqual(pierwsze_konto.saldo, 0, "Promocja zostala naliczona po mimo złego kodu")
     def test_kod_promocyjny_zlyPoczatek(self): 
         kod = "PRom_123"
-        pierwsze_konto=Konto(self.imie, self.nazwisko, self.pesel, kod)
+        pierwsze_konto=Konto(self.name, self.surname, self.pesel, kod)
         self.assertEqual(pierwsze_konto.saldo, 0, "Promocja nie zostala naliczona")
     def test_wieku_dobry(self):
         pesel = "19292929292"
         kod = "PROM_124"
-        pierwsze_konto = Konto(self.imie,self.nazwisko,pesel,kod)
+        pierwsze_konto = Konto(self.name,self.surname,pesel,kod)
         self.assertEqual(pierwsze_konto.saldo, 50, "Promocja nie zostala naliczona")
     def test_wieku_zly(self):
         pesel = "44092929292"
         kod = "PROM_124"
-        pierwsze_konto = Konto(self.imie,self.nazwisko,pesel,kod)
+        pierwsze_konto = Konto(self.name,self.surname,pesel,kod)
         self.assertEqual(pierwsze_konto.saldo, 0, "Promocja nie zostala naliczona")
 
 
