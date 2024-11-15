@@ -2,87 +2,88 @@ import unittest
 
 from ..PersonalAccount import PersonalAccount
 from ..FirmAccount import FirmAccount
+from parameterized import parameterized
 
 class Transfers(unittest.TestCase):
     name = 'Dariusz'
-    nazwisko = "Januszewski"
+    surname = "Januszewski"
     pesel = "042823011111"
-    nazwa="spolka sp. z.o.o"
+    firm_name="spolka sp. z.o.o"
     nip = 1234567890
+
+    def setUp(self):
+        self.account=PersonalAccount(self.name,self.surname,self.pesel)
+        self.firmAccount=FirmAccount(self.firm_name, self.nip)
     
+
+    # TESTS FOR PERSONAL ACCOUNT
+
     def test_inTransfer(self):
-        account=PersonalAccount(self.name, self.nazwisko, self.pesel, None)
-        account.inTransfer(1500)
-        self.assertEqual(account.balance, 1500, "Przelew nie przyszedl")
-    def test_outTransfer_srodki_sa(self):
-        account=PersonalAccount(self.name, self.nazwisko, self.pesel, None)
-        account.balance=500
-        account.outTransfer(200)
-        self.assertEqual(account.balance, 300, "Przelew nie przeszedl")
-    def test_outTransfer_srodkow_brak(self):
-        account=PersonalAccount(self.name, self.nazwisko, self.pesel, None)
-        account.outTransfer(200)
-        self.assertEqual(account.balance, 0, "Przelew nie przeszedl")  
-    def test_express_srodki_sa(self):
-        account=PersonalAccount(self.name, self.nazwisko, self.pesel)
-        account.balance = 500
-        account.expressOutTransfer(100)
-        self.assertEqual(account.balance, 399, "balance po przelewie sie nie zgadza")
-    def test_express_srodkow_brak(self):
-        account=PersonalAccount(self.name, self.nazwisko, self.pesel, None)
-        account.expressOutTransfer(100)
-        self.assertEqual(account.balance, 0, "balance po przelewie sie nie zgadza")
-    def test_Konto_express_srodkow_rowno(self):
-        account=PersonalAccount(self.name, self.nazwisko, self.pesel, "PROM_XYZ")
-        account.expressOutTransfer(50)
-        self.assertEqual(account.balance, -1, "balance po przelewie sie nie zgadza")
+        self.account.inTransfer(1500)
+        self.assertEqual(self.account.balance, 1500, "Przelew nie przyszedl")
+    
 
-    #testy firmy
-    def test_firma_przelew_przychodzacy(self):
-        account=FirmAccount(self.nazwa, self.nip)
-        account.inTransfer(100)
-        self.assertEqual(account.balance, 100, "Saldo si enie zgadza")
-    def test_firma_przelew_wychodzacy_udany(self):
-        account=FirmAccount(self.nazwa, self.nip)
-        account.balance=150
-        account.outTransfer(100)
-        self.assertEqual(account.balance, 50, "Saldo si enie zgadza")
-    def test_firma_przelew_wychodzacy_nieudany(self):
-        account=FirmAccount(self.nazwa, self.nip)
-        account.outTransfer(100)
-        self.assertEqual(account.balance, 0, "Saldo sie nie zgadza")
-    def test_Firma__express_srodki_sa(self):
-        account=FirmAccount(self.nazwa, self.nip)
-        account.balance=100
-        account.expressOutTransfer(50)
-        self.assertEqual(account.balance, 45, "balance po przelewie sie nie zgadza")
-    def test_Firma__express_srodkow_brak(self):
-        account=FirmAccount(self.nazwa, self.nip)
-        account.balance=100
-        account.expressOutTransfer(200)
-        self.assertEqual(account.balance, 100, "balance po przelewie sie nie zgadza")
-    def test_Firma__express_srodki_rowno(self):
-        account=FirmAccount(self.nazwa, self.nip)
-        account.balance=100
-        account.expressOutTransfer(100)
-        self.assertEqual(account.balance, -5, "balance po przelewie sie nie zgadza")
+    @parameterized.expand([
+        ("Enough funds for out-transfer", 500, 200, 300),
+        ("Not enough funds for out-transfer", 0, 200, 0)
+    ])
+    def test_outTransfer(self, name, balance, amount, expected):
+        self.account.balance=balance
+        self.account.outTransfer(amount)
+        self.assertEqual(self.account.balance, expected, "Balance is not right")
 
-    #test historii przelewow
-    def test_konto(self):
-        account=PersonalAccount(self.name,self.nazwisko,self.pesel)
-        account.inTransfer(500)
-        account.outTransfer(150)
-        account.expressOutTransfer(250)
-        self.assertEqual(account.history, [500,-150,-250,-1], "history sie nie zgadza")
-    def test_konto_firmowe(self):
-        account=FirmAccount(self.nazwa, self.nip)
-        account.inTransfer(500)
-        account.outTransfer(150)
-        account.expressOutTransfer(250)
-        self.assertEqual(account.history, [500,-150,-250,-5], "history sie nie zgadza")
+
+    @parameterized.expand([
+        ("Enough funds for express-out-transfer", 500, 100, 399),
+        ("Not enough funds for express-out-transfer", 0, 100, 0)
+    ])
+    def test_expressOutTransfer(self, name, balance, amount, expected):
+        self.account.balance = balance
+        self.account.expressOutTransfer(amount)
+        self.assertEqual(self.account.balance, expected, "Balance is not right")
+
+
+    #TESTS FOR FIRM ACCOUNT
+
+    def test_firm_inTransfer(self):
+        self.firmAccount.inTransfer(100)
+        self.assertEqual(self.firmAccount.balance, 100, "Balance is not right")
+
+
+    @parameterized.expand([
+        ("Enough funds for out-transfer", 150, 100, 50),
+        ("Not enough funds for out-transfer", 0, 200, 0)
+    ])
+    def test_firm_outTransfer(self, name, balance, amount, expected):
+        self.firmAccount.balance=balance
+        self.firmAccount.outTransfer(amount)
+        self.assertEqual(self.firmAccount.balance, expected, "Balance is not right")
 
 
 
+    @parameterized.expand([
+        ("Enough funds for express-out-transfer", 500, 100, 395),
+        ("Not enough funds for express-out-transfer", 20, 100, 20)
+    ])
+    def test_firm_expressOutTransfer(self, name, balance, amount, expected):
+        self.firmAccount.balance = balance
+        self.firmAccount.expressOutTransfer(amount)
+        self.assertEqual(self.firmAccount.balance, expected, "Balance is not right")
+
+    
+
+    #TESTS FOR TRANSFER HISTORY
+
+    def test_personalAccHistory(self):
+        self.account.inTransfer(500)
+        self.account.outTransfer(150)
+        self.account.expressOutTransfer(250)
+        self.assertEqual(self.account.history, [500,-150,-250,-1], "History is not right")
+    def test_firmAccHistory(self):
+        self.firmAccount.inTransfer(500)
+        self.firmAccount.outTransfer(150)
+        self.firmAccount.expressOutTransfer(250)
+        self.assertEqual(self.firmAccount.history, [500,-150,-250,-5], "History is not right")
 
 
 

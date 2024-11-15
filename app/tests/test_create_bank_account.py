@@ -1,8 +1,9 @@
 import unittest
 
 from ..PersonalAccount import PersonalAccount
-
 from ..FirmAccount import FirmAccount
+
+from parameterized import parameterized
 
 class TestCreateBankAccount(unittest.TestCase):
     name = 'Dariusz'
@@ -11,62 +12,53 @@ class TestCreateBankAccount(unittest.TestCase):
     firm_name="spolka sp. z.o.o"
     nip = 1234567890
 
-    def test_tworzenie_konta(self):
-        account = PersonalAccount(self.name, self.surname, self.pesel)
-        self.assertEqual(account.name, self.name, "name nie zostało zapisane!")
-        self.assertEqual(account.surname, self.surname, "surname nie zostało zapisane!")
-        self.assertEqual(account.balance, 0, "Saldo nie jest zerowe!")
-        self.assertEqual(account.pesel, self.pesel, "Pesel nie został zapisany")
+    def setUp(self): #nw czy to potrzebne wogole
+        self.account=PersonalAccount(self.name,self.surname,self.pesel)
+        self.firmAccount=FirmAccount(self.firm_name, self.nip) 
+
+    def test_makeAccount(self):
+        self.assertEqual(self.account.name, self.name)
+        self.assertEqual(self.account.surname, self.surname)
+        self.assertEqual(self.account.balance, 0)
+        self.assertEqual(self.account.pesel, self.pesel)
 
 
-    def test_za_dlugi_pesel(self):
+    def test_pesel_wrongLen(self):  #test dobrego peselu jest przy tworzneiu konta
         pesel = "123435674647632"
         account = PersonalAccount(self.name, self.surname, pesel)
+        #self.account.pesel = pesel #tutaj sie drugi raz w klasie nie wywoluje sprawdzanie peselu wez pokmin
+        # self.account.updatePesel(pesel) #ale to juz dziala yle ze z kodem wtedy juz nie bo kod wsumie podajesz tylko raz wiec chyba nie ma sensu tworzenie tu refaktora
         self.assertEqual(account.pesel, "Wrong PESEL", "Pesel nie zostal zapisany")
-    def test_zbyt_krotki_pesel(self):
-        pesel = "1234"
-        account = PersonalAccount(self.name, self.surname, pesel)
-        self.assertEqual(account.pesel, "Wrong PESEL", "Pesel nie zostal zapisany")
-    def test_kod_promocyjny_poprawny(self): 
-        kod = "PROM_123"
-        account=PersonalAccount(self.name, self.surname, self.pesel, kod)
-        self.assertEqual(account.balance, 50, "Promocja nie zostala naliczona")
-    def test_kod_promocyjny_zaDlugikoniec(self): 
-        kod = "PROM_1234"
-        account=PersonalAccount(self.name, self.surname, self.pesel, kod)
-        self.assertEqual(account.balance, 0, "Promocja zostala naliczona po mimo złego kodu")
-    def test_kod_promocyjny_zlyPoczatek(self): 
-        kod = "PRom_123"
-        account=PersonalAccount(self.name, self.surname, self.pesel, kod)
-        self.assertEqual(account.balance, 0, "Promocja nie zostala naliczona")
-    def test_wieku_dobry(self):
-        pesel = "19292929292"
-        kod = "PROM_124"
-        account = PersonalAccount(self.name,self.surname,pesel,kod)
-        self.assertEqual(account.balance, 50, "Promocja nie zostala naliczona")
-    def test_wieku_zly(self):
-        pesel = "44092929292"
-        kod = "PROM_124"
-        account = PersonalAccount(self.name,self.surname,pesel,kod)
-        self.assertEqual(account.balance, 0, "Promocja nie zostala naliczona")
+    
 
+    @parameterized.expand([
+        ("Age okay and Correct promotion code","12345678901", "PROM_123", 50),
+        ("Age okay but Wrong prefix","12345678901", "Prom_123", 0),
+        ("Age okay but Suffix too long", "12345678901", "PROM_1234",0),
+        ("Code okay but age wrong", "44092929292", "PROM_XYZ", 0)
+
+    ])
+    def test_promCodewithAgeCheck(self, name, pesel, code, balance): 
+        account=PersonalAccount(self.name, self.surname, pesel, code)
+        self.assertEqual(account.balance, balance)
+    
+    
 
     # konta firmowe
 
-    def test_tworzenie_konta_firmowego(self):
-        account=FirmAccount(self.firm_name, self.nip)
-        self.assertEqual(account.firm_name, self.firm_name, "Zła firm_name")
-        self.assertEqual(account.nip, self.nip, "Zły nip")
-        self.assertEqual(account.balance, 0, "Saldo nie jest zerowe")    
+    def test_makeFirmAccount(self):
+        self.assertEqual(self.firmAccount.firm_name, self.firm_name)
+        self.assertEqual(self.firmAccount.nip, self.nip)
+        self.assertEqual(self.firmAccount.balance, 0)    
 
-    def test_firma_nip_zla_dlugosc(self):
-        nip=234
+    @parameterized.expand([
+        ("Wrong NIP length", 234, "Wrong NIP"), #test dobrego nipu jest przy tworzeniu konta
+        ("NIP is not a number", "abc24", "Wrong NIP")
+    ])
+    def test_firmNip(self, name, nip, expected): 
         account=FirmAccount(self.firm_name, nip)
-        self.assertEqual(account.nip, "Wrong NIP", "Nip przeszedl a nie powinien")
-    def test_nip_nie_liczba(self):
-        nip="abc34"
-        account=FirmAccount(self.firm_name, nip)
-        self.assertEqual(account.nip, "Wrong NIP", "Nip przeszedl a nie powinien")
+        self.assertEqual(account.nip, expected)
+
     
 
 
