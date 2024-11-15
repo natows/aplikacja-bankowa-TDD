@@ -9,13 +9,13 @@ class PersonalAccount(Account):
             self.pesel = "Wrong PESEL"
         else:
             self.pesel = pesel
+
         if self.checkingPromotionCode(kod) and self.checkingAgebyPESEL(pesel):
             self.balance = 50     
         self.history = []  
-                
 
     def checkingPromotionCode(self, code):
-        return (code is not None and code[0:5] == "PROM_" and len(code)==8)
+        return code is not None and code[0:5] == "PROM_" and len(code)==8
     def checkingAgebyPESEL(self,pesel):
         return  int(pesel[0:2]) > 60 or pesel[2]=="2" or pesel[2]=="3"
     def outTransfer(self, amount):
