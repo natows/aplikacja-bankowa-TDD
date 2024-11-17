@@ -14,3 +14,7 @@ class FirmAccount(Account):
         return super().inTransfer(amount)
     def expressOutTransfer(self, amount, fee=5):
         return super().expressOutTransfer(amount, fee)
+    def takeLoan(self,amount):
+        if self.balance >= 2*amount and -1775 in self.history:
+            self.balance += amount
+            
