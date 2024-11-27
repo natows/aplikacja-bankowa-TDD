@@ -18,7 +18,6 @@ class AccountRegistry:
                 return i
         return 
     
-
     @classmethod
     def updateAcc(cls, pesel, new):
         account = cls.searchByPesel(pesel)
@@ -37,3 +36,4 @@ class AccountRegistry:
         return False
     
 
+    

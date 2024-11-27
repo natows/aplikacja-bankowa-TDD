@@ -7,9 +7,13 @@ app = Flask(__name__)
 def create_account():
     data = request.get_json()
     print(f"Create account request: {data}")
-    konto = PersonalAccount(data["name"], data["surname"], data["pesel"])
-    AccountRegistry.addAcc(konto)
-    return jsonify({"message": "Account created"}), 201
+    check = AccountRegistry.searchByPesel(data["pesel"])
+    if check: 
+        return jsonify({"message": "Account with this pesel already exists"}), 409
+    else:
+        konto = PersonalAccount(data["name"], data["surname"], data["pesel"])
+        AccountRegistry.addAcc(konto)
+        return jsonify({"message": "Account created"}), 201
 
 
 @app.route("/api/accounts/count", methods=['GET'])
@@ -44,4 +48,5 @@ def delete_account(pesel):
     else:
         return jsonify({"message": "Account not found"}), 404
 
-    
+
+
