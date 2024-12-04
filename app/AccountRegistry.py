@@ -24,7 +24,6 @@ class AccountRegistry:
         if account:
             account.name = new["name"] if "name" in new else account.name
             account.surname = new["surname"] if "surname" in new else account.surname
-            account.balance = new["balance"] if "balance" in new else account.balance
         return account
 
     @classmethod
