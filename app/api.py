@@ -11,8 +11,8 @@ def create_account():
     if check: 
         return jsonify({"message": "Account with this pesel already exists"}), 409
     else:
-        konto = PersonalAccount(data["name"], data["surname"], data["pesel"])
-        AccountRegistry.addAcc(konto)
+        account = PersonalAccount(data["name"], data["surname"], data["pesel"])
+        AccountRegistry.addAcc(account)
         return jsonify({"message": "Account created"}), 201
 
 
@@ -47,6 +47,33 @@ def delete_account(pesel):
         return jsonify({"message": "Account deleted"}), 200
     else:
         return jsonify({"message": "Account not found"}), 404
+
+@app.route("/api/accounts/<pesel>/transfer", methods=['POST'])
+def transfers(pesel):
+    data = request.get_json()
+    account = AccountRegistry.searchByPesel(pesel)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    prev_balance = account.balance
+    if data["type"] == "incoming":
+        account.inTransfer(data["amount"])
+        return jsonify({"message": "the order has been accepted for execution"}), 200
+    elif data["type"] == "outgoing":
+        account.outTransfer(data["amount"])
+        if prev_balance != account.balance:
+            return jsonify({"message": "the order has been accepted for execution"}), 200
+        else:
+            return jsonify({"message": "the order has NOT been accepted for execution"}), 422
+    elif data["type"] == "express": 
+        account.expressOutTransfer(data["amount"])
+        if prev_balance != account.balance:
+            return jsonify({"message": "the order has been accepted for execution"}), 200
+        else:
+            return jsonify({"message": "the order has NOT been accepted for execution"}), 422
+    else:
+        return jsonify({"message": "Incorrect type of transfer"}), 400
+
+
 
 
 

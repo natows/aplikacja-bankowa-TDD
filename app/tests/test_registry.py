@@ -20,23 +20,41 @@ class Registry(unittest.TestCase):
         cls.account2 = PersonalAccount(cls.name2, cls.surname2, cls.pesel2)
     
     def setUp(self):
+        self.registry.addAcc(self.account1)
+    
+    def tearDown(self):
         self.registry.accountList = []
 
+
     def test_addAccount_and_countAccount(self):
-        self.registry.addAcc(self.account1) 
         self.assertEqual(self.registry.countAcc(), 1)
     
     def test_findByPesel(self):
-        self.registry.addAcc(self.account1)
         found_acc = self.registry.searchByPesel(self.pesel1)
         self.assertEqual(found_acc, self.account1) 
         not_found_acc = self.registry.searchByPesel(self.pesel2)
         self.assertEqual(not_found_acc, None)
     
     def test_countAccounts(self):
-        self.registry.addAcc(self.account1)
         self.registry.addAcc(self.account2)
         self.assertEqual(self.registry.countAcc(), 2)
+
+    def test_updateAcc(self):
+        self.registry.updateAcc(self.pesel1,{"name": "Natalia", "surname": "Owsiejko"})
+        account = self.registry.searchByPesel(self.pesel1)
+        self.assertEqual(account.name, "Natalia")
+        self.assertEqual(account.surname, "Owsiejko")
+
+    def test_deleteAcc(self):
+        self.registry.addAcc(self.account2)
+        result = self.registry.removeAcc(self.pesel2)
+        self.assertTrue(result)
+
+    def test_delete_nonExistingAcc(self):
+        result = self.registry.removeAcc("123")
+        self.assertFalse(result)
+
+    
 
 
 
