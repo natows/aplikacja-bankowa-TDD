@@ -20,11 +20,19 @@ class testAPICrud(unittest.TestCase):
 
 
     def setUp(self):
-        requests.post(self.url, json = self.body)
+        response = requests.post(self.url, json = self.body)
+        self.assertEqual(response.status_code, 201)
+
+    def tearDown(self):
+        response = requests.delete(self.url + "/" + self.body["pesel"])
+        self.assertEqual(response.status_code, 200)
+        
     
+
     def test_create_account(self):
         response = requests.post(self.url, json = self.body2)
         self.assertEqual(response.status_code, 201)
+
     
 
     def test_create_account_same_pesel(self):
@@ -61,8 +69,9 @@ class testAPICrud(unittest.TestCase):
         self.assertEqual(account_data["name"], new["name"])
         self.assertEqual(account_data["surname"], new["surname"])
     
+
     def test_delete_existing_acc(self):
-        response = requests.delete(self.url + "/"  + self.body['pesel'])
+        response = requests.delete(self.url + "/"  + self.body2['pesel'])
         self.assertEqual(response.status_code, 200)
     
     def test_delete_nonexisting_acc(self):
@@ -70,5 +79,71 @@ class testAPICrud(unittest.TestCase):
         response = requests.delete(self.url + "/"  + pesel)
         self.assertEqual(response.status_code, 404)
 
+    def test_transfer_accNotFound(self):
+        transfer ={
+            "amount": 500,
+            "type": "incoming"
+        }
+        response = requests.post(self.url + "/" + "00192929924" + "/transfer", json = transfer)
+        self.assertEqual(response.status_code, 404)
 
+    def test_inTransfer(self):
+        transfer ={
+            "amount": 500,
+            "type": "incoming"
+        }
+        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer)
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_outTransfer_failed(self):
+        transfer ={
+            "amount": 600,
+            "type": "outgoing"
+        }
+        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer)
+        self.assertEqual(response.status_code, 422)
+    
+
+    def test_outTransfer_succesful(self):
+        transfer1 ={
+            "amount": 250,
+            "type": "incoming"
+        }
+        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer1)
+        self.assertEqual(response.status_code, 200)
+        transfer2 ={
+            "amount": 250,
+            "type": "outgoing"
+        }
+        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer2)
+        self.assertEqual(response.status_code, 200)
+    
+
+    def test_expressOutTransfer_failed(self):
+        transfer ={
+            "amount": 600,
+            "type": "express"
+        }
+        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer)
+        self.assertEqual(response.status_code, 422)
+
+
+    def test_expressOutTransfer_succesful(self):
+        transfer1 ={
+            "amount": 250,
+            "type": "incoming"
+        }
+        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer1)
+        self.assertEqual(response.status_code, 200)
+        transfer2 ={
+            "amount": 200,
+            "type": "express"
+        }
+        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer2)
+        self.assertEqual(response.status_code, 200)
+
+
+
+        
 
