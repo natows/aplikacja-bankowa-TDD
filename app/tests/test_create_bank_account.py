@@ -1,5 +1,7 @@
 import unittest
- 
+  
+from unittest.mock import patch
+
 from ..PersonalAccount import PersonalAccount
 from ..FirmAccount import FirmAccount
 
@@ -12,9 +14,15 @@ class TestCreateBankAccount(unittest.TestCase):
     firm_name="spolka sp. z.o.o"
     nip = 1234567890
 
-    def setUp(self): #nw czy to potrzebne wogole
+    @patch('requests.get')
+    def setUp(self, mock_get):
         self.account=PersonalAccount(self.name,self.surname,self.pesel)
-        self.firmAccount=FirmAccount(self.firm_name, self.nip) 
+
+        mock_response = unittest.mock.Mock()
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        
+        self.firmAccount = FirmAccount(self.firm_name, self.nip)
 
     def test_makeAccount(self):
         self.assertEqual(self.account.name, self.name)
@@ -26,8 +34,6 @@ class TestCreateBankAccount(unittest.TestCase):
     def test_pesel_wrongLen(self):  #test dobrego peselu jest przy tworzneiu konta
         pesel = "123435674647632"
         account = PersonalAccount(self.name, self.surname, pesel)
-        #self.account.pesel = pesel #tutaj sie drugi raz w klasie nie wywoluje sprawdzanie peselu wez pokmin
-        # self.account.updatePesel(pesel) #ale to juz dziala yle ze z kodem wtedy juz nie bo kod wsumie podajesz tylko raz wiec chyba nie ma sensu tworzenie tu refaktora
         self.assertEqual(account.pesel, "Wrong PESEL", "Pesel nie zostal zapisany")
     
 
@@ -58,6 +64,37 @@ class TestCreateBankAccount(unittest.TestCase):
     def test_firmNip(self, name, nip, expected): 
         account=FirmAccount(self.firm_name, nip)
         self.assertEqual(account.nip, expected)
+
+    @patch('app.FirmAccount.requests.get')
+    def test_checkNip_valid(self, mock_get):
+        mock_response = unittest.mock.Mock()
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+
+        result = FirmAccount.checkNip("1234567890")
+
+        self.assertTrue(result)
+
+
+    @patch('app.FirmAccount.requests.get')
+    def test_checkNip_wrong(self, mock_get):
+        mock_response = unittest.mock.Mock()
+        mock_response.status_code = 404
+        mock_get.return_value = mock_response
+
+        result = FirmAccount.checkNip("1111111119")
+
+        self.assertFalse(result)
+        
+        with self.assertRaises(ValueError) as context:
+            FirmAccount(firm_name="Test Firm", nip="1111111119")  
+
+        self.assertEqual(str(context.exception), "Company not registered!!")
+
+    
+
+
+
 
     
 

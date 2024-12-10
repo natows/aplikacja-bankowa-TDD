@@ -1,5 +1,7 @@
 import unittest
 
+from unittest.mock import patch
+
 from ..PersonalAccount import PersonalAccount
 from ..FirmAccount import FirmAccount
 from parameterized import parameterized
@@ -11,9 +13,14 @@ class Transfers(unittest.TestCase):
     firm_name="spolka sp. z.o.o"
     nip = 1234567890
 
-    def setUp(self):
+    @patch('requests.get')
+    def setUp(self, mock_get):
         self.account=PersonalAccount(self.name,self.surname,self.pesel)
-        self.firmAccount=FirmAccount(self.firm_name, self.nip)
+        mock_response = unittest.mock.Mock()
+        mock_response.status_code = 200
+        mock_get.return_value = mock_response
+        
+        self.firmAccount = FirmAccount(self.firm_name, self.nip)
     
 
     # TESTS FOR PERSONAL ACCOUNT

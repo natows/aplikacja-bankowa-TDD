@@ -1,8 +1,7 @@
 import unittest, requests
 
-from app.AccountRegistry import AccountRegistry
+from unittest.mock import patch
 
-from app.PersonalAccount import PersonalAccount
 
 class testAPICrud(unittest.TestCase):
     body = {
@@ -32,6 +31,9 @@ class testAPICrud(unittest.TestCase):
     def test_create_account(self):
         response = requests.post(self.url, json = self.body2)
         self.assertEqual(response.status_code, 201)
+
+
+
 
     
 
