@@ -33,4 +33,7 @@ class FirmAccount(Account):
         if response.status_code == 200:
             return True
         return False
-            
+    
+    def sendHistoryToEmail(self, email, smtp, text = "Historia konta Twojej firmy to: "):
+        return super().sendHistoryToEmail(email, smtp, text)
+  
