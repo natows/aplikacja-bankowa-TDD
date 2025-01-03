@@ -32,4 +32,7 @@ class PersonalAccount(Account):
     def sum_of_5_last_trans(self,amount):
         return len(self.history) >=5 and sum(self.history[-5:])>amount
     
+    def sendHistoryToEmail(self, email, smtp, text="Twoja historia konta to:"):
+        return super().sendHistoryToEmail(email, smtp, text)
+    
     
