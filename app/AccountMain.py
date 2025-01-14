@@ -5,8 +5,9 @@ class Account:
             self.balance -= amount
             self.history.append(-amount)
     def inTransfer(self,amount):
-        self.balance += amount
-        self.history.append(amount)
+        if amount>0:
+            self.balance += amount
+            self.history.append(amount)
     def expressOutTransfer(self, amount, fee):
         if self.balance - amount >=0 :
             self.balance -= (amount + fee)
