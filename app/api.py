@@ -26,7 +26,7 @@ def get_account_by_pesel(pesel):
     account= AccountRegistry.searchByPesel(pesel)
     if account is None:
         return jsonify({"message": "Account not found"}), 404
-    return jsonify({"name": account.name, "surname": account.surname}), 201
+    return jsonify({"name": account.name, "surname": account.surname,"balance": account.balance}), 201
 
 @app.route("/api/accounts/<pesel>", methods=['PATCH'])
 def update_account(pesel):
@@ -56,22 +56,25 @@ def transfers(pesel):
         return jsonify({"message": "Account not found"}), 404
     prev_balance = account.balance
     if data["type"] == "incoming":
-        account.inTransfer(data["amount"])
-        return jsonify({"message": "the order has been accepted for execution"}), 200
-    elif data["type"] == "outgoing":
-        account.outTransfer(data["amount"])
+        account.inTransfer(int(data["amount"]))
         if prev_balance != account.balance:
-            return jsonify({"message": "the order has been accepted for execution"}), 200
+            return jsonify({"message": "the order has been accepted for execution", "balance": account.balance}), 200
+        else:
+            return jsonify({"message": "the order has NOT been accepted for execution"}), 422
+    elif data["type"] == "outgoing":
+        account.outTransfer(int(data["amount"]))
+        if prev_balance != account.balance:
+            return jsonify({"message": "the order has been accepted for execution", "balance": account.balance}), 200
         else:
             return jsonify({"message": "the order has NOT been accepted for execution"}), 422
     elif data["type"] == "express": 
-        account.expressOutTransfer(data["amount"])
+        account.expressOutTransfer(int(data["amount"]))
         if prev_balance != account.balance:
-            return jsonify({"message": "the order has been accepted for execution"}), 200
+            return jsonify({"message": "the order has been accepted for execution", "balance": account.balance}), 200
         else:
             return jsonify({"message": "the order has NOT been accepted for execution"}), 422
     else:
-        return jsonify({"message": "Incorrect type of transfer"}), 400
+        return jsonify({"message": "Incorrect type of transfer", "balance": account.balance}), 400
 
 
 
