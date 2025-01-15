@@ -65,13 +65,15 @@ class TestCreateBankAccount(unittest.TestCase):
         account=FirmAccount(self.firm_name, nip)
         self.assertEqual(account.nip, expected)
 
+
+
     @patch('app.FirmAccount.requests.get')
     def test_checkNip_valid(self, mock_get):
         mock_response = unittest.mock.Mock()
         mock_response.status_code = 200
         mock_get.return_value = mock_response
 
-        result = FirmAccount.checkNip("1234567890")
+        result = FirmAccount.checkNip("1234512345")
 
         self.assertTrue(result)
 

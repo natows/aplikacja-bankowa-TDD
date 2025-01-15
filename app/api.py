@@ -37,7 +37,7 @@ def update_account(pesel):
     return jsonify({
             "pesel": account.pesel,
             "name": account.name,
-            "surname": account.surname,
+            "surname": account.surname, 
         }), 200
     
 
