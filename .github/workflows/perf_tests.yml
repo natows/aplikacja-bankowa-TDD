@@ -28,6 +28,7 @@ jobs:
     - name: Start flask app
       run: | 
         python3 -m flask --app app/api.py run &
+        sleep 10
     - name: Test with pytest
       run: |
         python3 -m unittest app/api_test/test_performance.py

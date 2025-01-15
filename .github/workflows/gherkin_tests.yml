@@ -28,6 +28,7 @@ jobs:
     - name: Start Flask app
       run: |
         python3 -m flask --app app/api.py run &
+        sleep 10
     - name: Run Gherkin tests with Behave
       run: |
         python -m behave app/features
