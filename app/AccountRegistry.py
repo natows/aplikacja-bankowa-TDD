@@ -1,4 +1,5 @@
 from .PersonalAccount import PersonalAccount
+import json
 
 class AccountRegistry:
     accountList = []
@@ -33,6 +34,35 @@ class AccountRegistry:
             cls.accountList.remove(account)
             return True
         return False
+    
+
+    @classmethod     
+    def saveBackupData(cls, filename):
+        data = []
+        for account in cls.accountList:
+            data.append({
+                "name": account.name,
+                "surname": account.surname,
+                "pesel": account.pesel
+            })
+        with open(filename, "w", encoding = "utf-8") as file:
+            json.dump(data, file, indent=4)
+
+    @classmethod     
+    def loadBackupData(cls, filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            data = json.load(file)
+
+        cls.accountList = []
+
+        for acc_data in data:
+            account = PersonalAccount(
+                name=acc_data["name"],
+                surname=acc_data["surname"],
+                pesel=acc_data["pesel"]
+            )
+            cls.addAcc(account)
+
     
 
     

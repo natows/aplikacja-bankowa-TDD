@@ -1,7 +1,5 @@
 import unittest, requests
 
-from unittest.mock import patch
-
 
 class testAPICrud(unittest.TestCase):
     body = {
@@ -31,10 +29,6 @@ class testAPICrud(unittest.TestCase):
     def test_create_account(self):
         response = requests.post(self.url, json = self.body2)
         self.assertEqual(response.status_code, 201)
-
-
-
-
     
 
     def test_create_account_same_pesel(self):
@@ -48,14 +42,14 @@ class testAPICrud(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(count["Count"], 1)
 
-    def test_check_peselOkay(self):
+    def test_get_acc_by_pesel_peselOkay(self):
         response = requests.get(self.url + "/" + self.body['pesel'])
         self.assertEqual(response.status_code, 201)
         account_data = response.json()
         self.assertEqual(account_data["name"], self.body["name"])
         self.assertEqual(account_data["surname"], self.body["surname"])
     
-    def test_check_peselWrong(self):
+    def test_get_acc_by_pesel_peselWrong(self):
         pesel = "12345678901"
         response = requests.get(self.url + "/" + pesel)
         self.assertEqual(response.status_code, 404)
@@ -86,7 +80,7 @@ class testAPICrud(unittest.TestCase):
             "amount": 500,
             "type": "incoming"
         }
-        response = requests.post(self.url + "/" + "00192929924" + "/transfer", json = transfer)
+        response = requests.post(self.url + "/00192929924/transfer", json = transfer)
         self.assertEqual(response.status_code, 404)
 
     def test_inTransfer(self):
