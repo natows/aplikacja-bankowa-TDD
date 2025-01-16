@@ -1,5 +1,8 @@
 name: Gherkin tests
+<<<<<<< HEAD
 
+=======
+>>>>>>> 25ebd9d828a42cede573b4e762c2102d19076b42
 
 on:
   push:
@@ -32,4 +35,3 @@ jobs:
     - name: Run Gherkin tests with Behave
       run: |
         python -m behave app/features
-

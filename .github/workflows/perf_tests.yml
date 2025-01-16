@@ -1,6 +1,5 @@
 name: Performance tests
 
-
 on:
   push:
     branches: [ "main" ]
