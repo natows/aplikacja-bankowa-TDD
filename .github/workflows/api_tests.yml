@@ -23,12 +23,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest coverage parameterized
+        pip install flake8 pytest coverage parameterized flask
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Start flask app
       run: | 
         python3 -m flask --app app/api.py run &
-        sleep 10
     - name: Test with pytest
       run: |
         python3 -m unittest app/api_test/test_api.py
