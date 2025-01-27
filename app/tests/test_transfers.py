@@ -6,7 +6,7 @@ from ..PersonalAccount import PersonalAccount
 from ..FirmAccount import FirmAccount
 from parameterized import parameterized
 
-class Transfers(unittest.TestCase):
+class TestTransfers(unittest.TestCase):
     name = 'Dariusz'
     surname = "Januszewski"
     pesel = "04282301111"

@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from app.AccountRegistry import AccountRegistry
 from app.PersonalAccount import PersonalAccount
+import os
 app = Flask(__name__)
 
 @app.route("/api/accounts", methods=['POST'])
@@ -76,6 +77,28 @@ def transfers(pesel):
     else:
         return jsonify({"message": "Incorrect type of transfer", "balance": account.balance}), 400
 
+
+@app.route("/api/accounts/save", methods=['POST'])
+def saveBackupData():
+    filename = "app/registryBackup.json"  
+    try:
+        AccountRegistry.saveBackupData(filename)
+        return jsonify({"message": "Backup data saved successfully"}), 200
+    except Exception as e:
+        return jsonify({"message": f"Error saving backup: {str(e)}"}), 500
+
+
+@app.route("/api/accounts/load", methods=['POST'])
+def loadBackupData():
+    filename = "app/registryBackup.json"  
+    if not os.path.exists(filename):
+        return jsonify({"message": "Backup file not found"}), 404
+    
+    try:
+        AccountRegistry.loadBackupData(filename)
+        return jsonify({"message": "Backup data loaded successfully"}), 200
+    except Exception as e:
+        return jsonify({"message": f"Error loading backup: {str(e)}"}), 500
 
 
 

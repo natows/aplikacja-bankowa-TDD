@@ -5,7 +5,7 @@ from ..PersonalAccount import PersonalAccount
 from ..FirmAccount import FirmAccount
 from parameterized import parameterized
 
-class Loans(unittest.TestCase):
+class TestLoans(unittest.TestCase):
     name = 'Dariusz'
     surname = "Januszewski"
     pesel = "04282301111"

@@ -5,7 +5,7 @@ from ..AccountRegistry import AccountRegistry
 from ..PersonalAccount import PersonalAccount
 
 
-class Registry(unittest.TestCase):
+class TestRegistry(unittest.TestCase):
     name1 = 'Dariusz'
     surname1 = "Januszewski"
     pesel1 = "04282301111"
