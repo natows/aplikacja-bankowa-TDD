@@ -30,8 +30,6 @@ class TestCreateFirmAccount(unittest.TestCase):
         account=FirmAccount(self.firm_name, nip)
         self.assertEqual(account.nip, expected)
 
-
-
     @patch('app.FirmAccount.requests.get')
     def test_checkNip_valid(self, mock_get):
         mock_response = unittest.mock.Mock()

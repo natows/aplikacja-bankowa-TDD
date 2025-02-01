@@ -1,4 +1,4 @@
-import unittest, os, json
+import unittest, json
 
 from ..AccountRegistry import AccountRegistry
 from ..PersonalAccount import PersonalAccount
