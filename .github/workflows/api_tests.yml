@@ -28,6 +28,6 @@ jobs:
     - name: Start flask app
       run: | 
         python3 -m flask --app app/api.py run &
-    - name: Test with pytest
+    - name: Test with unittest
       run: |
-        python3 -m unittest app/api_test/test_api.py
+        python3 -m unittest discover -s app/api_test -p "*.py"

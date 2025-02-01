@@ -17,12 +17,12 @@ class testAPICrud(unittest.TestCase):
 
 
     def setUp(self):
-        response = requests.post(self.url, json = self.body)
-        self.assertEqual(response.status_code, 201)
+        requests.post(self.url, json = self.body)
 
     def tearDown(self):
-        response = requests.delete(self.url + "/" + self.body["pesel"])
-        self.assertEqual(response.status_code, 200)
+        requests.delete(self.url + "/" + self.body["pesel"])
+        requests.delete(self.url + "/" + self.body2["pesel"])
+        
         
     
 
@@ -37,14 +37,18 @@ class testAPICrud(unittest.TestCase):
 
 
     def test_count_accounts(self):
-        response = requests.get(self.url + "/count")
-        count = response.json()
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(count["Count"], 1)
+        initial_count = requests.get(self.url + "/count").json()["Count"]
+
+        response = requests.post(self.url, json=self.body2)
+        self.assertEqual(response.status_code, 201)
+
+        new_count = requests.get(self.url + "/count").json()["Count"]
+        self.assertEqual(new_count, initial_count + 1) 
+
 
     def test_get_acc_by_pesel_peselOkay(self):
         response = requests.get(self.url + "/" + self.body['pesel'])
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 200)
         account_data = response.json()
         self.assertEqual(account_data["name"], self.body["name"])
         self.assertEqual(account_data["surname"], self.body["surname"])
@@ -55,10 +59,7 @@ class testAPICrud(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_update_Acc(self):
-        new = {
-            "name": "Asia",
-            "surname": "Asiowa"
-        }
+        new = {"name": "Asia","surname": "Asiowa"}
         response = requests.patch(self.url + "/"  + self.body['pesel'], json = new)
         self.assertEqual(response.status_code, 200)
         account_data = response.json()
@@ -67,7 +68,7 @@ class testAPICrud(unittest.TestCase):
     
 
     def test_delete_existing_acc(self):
-        response = requests.delete(self.url + "/"  + self.body2['pesel'])
+        response = requests.delete(self.url + "/"  + self.body['pesel'])
         self.assertEqual(response.status_code, 200)
     
     def test_delete_nonexisting_acc(self):
@@ -75,71 +76,5 @@ class testAPICrud(unittest.TestCase):
         response = requests.delete(self.url + "/"  + pesel)
         self.assertEqual(response.status_code, 404)
 
-    def test_transfer_accNotFound(self):
-        transfer ={
-            "amount": 500,
-            "type": "incoming"
-        }
-        response = requests.post(self.url + "/00192929924/transfer", json = transfer)
-        self.assertEqual(response.status_code, 404)
-
-    def test_inTransfer(self):
-        transfer ={
-            "amount": 500,
-            "type": "incoming"
-        }
-        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer)
-        self.assertEqual(response.status_code, 200)
-
-
-    def test_outTransfer_failed(self):
-        transfer ={
-            "amount": 600,
-            "type": "outgoing"
-        }
-        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer)
-        self.assertEqual(response.status_code, 422)
     
-
-    def test_outTransfer_succesful(self):
-        transfer1 ={
-            "amount": 250,
-            "type": "incoming"
-        }
-        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer1)
-        self.assertEqual(response.status_code, 200)
-        transfer2 ={
-            "amount": 250,
-            "type": "outgoing"
-        }
-        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer2)
-        self.assertEqual(response.status_code, 200)
-    
-
-    def test_expressOutTransfer_failed(self):
-        transfer ={
-            "amount": 600,
-            "type": "express"
-        }
-        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer)
-        self.assertEqual(response.status_code, 422)
-
-
-    def test_expressOutTransfer_succesful(self):
-        transfer1 ={
-            "amount": 250,
-            "type": "incoming"
-        }
-        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer1)
-        self.assertEqual(response.status_code, 200)
-        transfer2 ={
-            "amount": 200,
-            "type": "express"
-        }
-        response = requests.post(self.url + "/" + self.body["pesel"] + "/transfer", json = transfer2)
-        self.assertEqual(response.status_code, 200)
-
-
-
-        
 

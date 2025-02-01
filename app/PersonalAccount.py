@@ -1,7 +1,7 @@
 from .AccountMain import Account
 
 class PersonalAccount(Account):
-    def __init__(self, name, surname, pesel, kod = None):
+    def __init__(self, name, surname, pesel, code = None):
         self.name = name
         self.surname = surname
         self.balance = 0
@@ -10,7 +10,7 @@ class PersonalAccount(Account):
         else:
             self.pesel = pesel
 
-        if self.checkingPromotionCode(kod) and self.checkingAgebyPESEL(pesel):
+        if self.checkingPromotionCode(code) and self.checkingAgebyPESEL(pesel):
             self.balance = 50     
         self.history = []  
 

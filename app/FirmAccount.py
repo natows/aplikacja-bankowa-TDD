@@ -27,13 +27,13 @@ class FirmAccount(Account):
         gov_url = os.getenv('BANK_APP_MF_URL', 'https://wl-test.mf.gov.pl/')
         today = datetime.datetime.today().strftime('%Y-%m-%d')
         nip_path = f"{gov_url}api/search/nip/{nip}/?date={today}"
-        # print(f"Sending request to {nip_path}")
+        print(f"Sending request to {nip_path}")
         response = requests.get(nip_path)
-        # print(f"Response for given nip: {response.status_code}, {response.json()}")
+        print(f"Response for given nip: {response.status_code}, {response.json()}")
         if response.status_code == 200:
             return True
         return False
     
-    def sendHistoryToEmail(self, email, smtp, text = "Historia konta Twojej firmy to: "):
+    def sendHistoryToEmail(self, email, smtp, text = "Historia konta Twojej firmy to:"):
         return super().sendHistoryToEmail(email, smtp, text)
   

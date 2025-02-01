@@ -6,7 +6,9 @@ class AccountRegistry:
 
     @classmethod
     def addAcc(cls, account):
-        cls.accountList.append(account)
+        if not cls.searchByPesel(account.pesel):
+            cls.accountList.append(account)
+        else: return False
         
     @classmethod  
     def countAcc(cls):

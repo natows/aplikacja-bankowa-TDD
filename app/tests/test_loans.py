@@ -21,6 +21,12 @@ class TestLoans(unittest.TestCase):
         mock_get.return_value = mock_response
         
         self.firmAccount = FirmAccount(self.firm_name, self.nip)
+        
+    def tearDown(self):
+        self.account.balance = 0
+        self.account.history = []
+        self.firmAccount.balance = 0
+        self.firmAccount.history = []
 
     @parameterized.expand([
         ("Empty transfer history", [], 1000, 0),
