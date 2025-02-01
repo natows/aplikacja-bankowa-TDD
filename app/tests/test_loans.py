@@ -5,7 +5,7 @@ from ..PersonalAccount import PersonalAccount
 from ..FirmAccount import FirmAccount
 from parameterized import parameterized
 
-class Loans(unittest.TestCase):
+class TestLoans(unittest.TestCase):
     name = 'Dariusz'
     surname = "Januszewski"
     pesel = "04282301111"
@@ -21,6 +21,12 @@ class Loans(unittest.TestCase):
         mock_get.return_value = mock_response
         
         self.firmAccount = FirmAccount(self.firm_name, self.nip)
+        
+    def tearDown(self):
+        self.account.balance = 0
+        self.account.history = []
+        self.firmAccount.balance = 0
+        self.firmAccount.history = []
 
     @parameterized.expand([
         ("Empty transfer history", [], 1000, 0),

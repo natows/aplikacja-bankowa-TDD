@@ -1,4 +1,4 @@
-import unittest, requests
+import unittest, requests, time
 
 class PerformanceTests(unittest.TestCase):
     url = "http://127.0.0.1:5000/api/accounts"
@@ -20,9 +20,16 @@ class PerformanceTests(unittest.TestCase):
 
     def test_create_and_delete_100_accounts(self):
         for _ in range(self.iteration_count):
+            start_time = time.time()
             response = requests.post(self.url, json = self.body, timeout=self.timeout)
+            response_time = time.time() - start_time
+            self.assertLess(response_time, self.timeout)
             self.assertEqual(response.status_code, 201)
+
+            start_time = time.time()
             response = requests.delete(self.url + f"/{self.body['pesel']}", timeout=self.timeout)
+            response_time = time.time() - start_time
+            self.assertLess(response_time, self.timeout)
             self.assertEqual(response.status_code, 200)
         
     
@@ -30,7 +37,10 @@ class PerformanceTests(unittest.TestCase):
         response = requests.post(self.url, json=self.body)
         self.assertEqual(response.status_code, 201)
         for _ in range(self.iteration_count):
+            start_time = time.time()
             response = requests.post(self.url + f"/{self.body['pesel']}/transfer", json = self.transfer, timeout=self.timeout)
+            response_time = time.time() - start_time
+            self.assertLess(response_time, self.timeout)
             self.assertEqual(response.status_code, 200)
         expected_balance = self.transfer["amount"]*self.iteration_count
         account_data = response.json()

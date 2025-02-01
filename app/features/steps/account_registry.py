@@ -23,7 +23,7 @@ def is_account_count_equal_to(context, count):
 @step('Account with pesel "{pesel}" exists in registry')
 def check_account_with_pesel_exists(context, pesel):
     response = requests.get(URL + f"/{pesel}")
-    assert_equal(response.status_code, 201)
+    assert_equal(response.status_code, 200)
 
 
 @step('Account with pesel "{pesel}" does not exist in registry')
@@ -48,6 +48,6 @@ def update_field(context, field, pesel, value):
 @then('Account with pesel "{pesel}" has "{field}" equal to "{value}"')
 def field_equals_to(context, pesel, field, value):
     response = requests.get(URL + f"/{pesel}")
-    assert_equal(response.status_code, 201)
+    assert_equal(response.status_code, 200)
     account = response.json()
     assert_equal(account[f"{field}"], value)

@@ -31,4 +31,3 @@ jobs:
     - name: Run Gherkin tests with Behave
       run: |
         python -m behave app/features
-    

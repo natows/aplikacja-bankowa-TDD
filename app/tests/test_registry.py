@@ -5,7 +5,7 @@ from ..AccountRegistry import AccountRegistry
 from ..PersonalAccount import PersonalAccount
 
 
-class Registry(unittest.TestCase):
+class TestRegistry(unittest.TestCase):
     name1 = 'Dariusz'
     surname1 = "Januszewski"
     pesel1 = "04282301111"
@@ -27,6 +27,12 @@ class Registry(unittest.TestCase):
 
 
     def test_addAccount_and_countAccount(self):
+        self.assertEqual(self.registry.countAcc(), 1)
+
+    def test_addAccount_samePesel(self):
+        account = PersonalAccount("Jan", "Kowalski", self.pesel1)
+        result = self.registry.addAcc(account)
+        self.assertFalse(result)
         self.assertEqual(self.registry.countAcc(), 1)
     
     def test_findByPesel(self):

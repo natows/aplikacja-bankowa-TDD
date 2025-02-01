@@ -9,14 +9,13 @@ def make_transfer(context,pesel,type,amount):
     json_body={"type": f"{type}",
                "amount": f"{amount}"}
     response = requests.post(URL + f"/{pesel}/transfer", json=json_body)
-    # assert_equal(response.status_code, 200)
     context.response = response
     context.response_data = response.json()
 
 @step('Account with pesel "{pesel}" has balance "{balance}"')
 def check_balance(context,pesel,balance):
     response = requests.get(URL + f"/{pesel}")
-    assert_equal(response.status_code, 201)
+    assert_equal(response.status_code, 200)
     account = response.json()
     assert_equal(account["balance"], int(balance))
 

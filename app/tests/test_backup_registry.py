@@ -1,11 +1,10 @@
 import unittest, os, json
 
-
 from ..AccountRegistry import AccountRegistry
 from ..PersonalAccount import PersonalAccount
 
-class Backup(unittest.TestCase):
-    filepath = "app/registryBackup.json"
+class TestBackupRegistry(unittest.TestCase):
+    filepath = "app/registry_backup.json"
     person1 = {
         "name": "Zbych",
         "surname": "Zbyszkowy", 
@@ -27,7 +26,8 @@ class Backup(unittest.TestCase):
         account1 = PersonalAccount(self.person1["name"], self.person1["surname"], self.person1["pesel"])
         account2 = PersonalAccount(self.person2["name"], self.person2["surname"], self.person2["pesel"])
         self.registry.accountList=[account1,account2]
-        self.assertTrue(os.path.exists(self.filepath))
+        with open(self.filepath, "w", encoding="utf-8") as file:
+            json.dump([], file, indent=4)
         
 
     def tearDown(self):

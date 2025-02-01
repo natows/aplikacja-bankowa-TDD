@@ -3,3 +3,4 @@ requests
 behave
 unittest_assertions
 Flask>=2.0.0
+coverage
