@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Dariusz",
+        "surname": "Januszewski",
+        "pesel": "04282301111"
+    },
+    {
+        "name": "Natalia",
+        "surname": "Owsiejko",
+        "pesel": "12345678910"
+    },
+    {
+        "name": "Zygmunt",
+        "surname": "Waza",
+        "pesel": "12345678911"
+    }
+]

@@ -4,7 +4,7 @@ from ..AccountRegistry import AccountRegistry
 from ..PersonalAccount import PersonalAccount
 
 class TestBackupRegistry(unittest.TestCase):
-    filepath = "app/registryBackup.json"
+    filepath = "app/registry_backup.json"
     person1 = {
         "name": "Zbych",
         "surname": "Zbyszkowy", 

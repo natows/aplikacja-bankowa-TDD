@@ -78,20 +78,22 @@ def transfers(pesel):
     return jsonify({"message": "The order has NOT been accepted"}), 422 
 
 
-
 @app.route("/api/accounts/save", methods=['POST'])
 def saveBackupData():
-    filename = "app/registryBackup.json"  
+    data = request.get_json()
+    filename = data['filepath']
+    if not os.path.exists(filename):
+        return jsonify({"message": "Backup file not found"}), 404
     try:
         AccountRegistry.saveBackupData(filename)
         return jsonify({"message": "Backup data saved successfully"}), 200
     except Exception as e:
         return jsonify({"message": f"Error saving backup: {str(e)}"}), 500
 
-
 @app.route("/api/accounts/load", methods=['POST'])
 def loadBackupData():
-    filename = "app/registryBackup.json"  
+    data = request.get_json()
+    filename = data['filepath']
     if not os.path.exists(filename):
         return jsonify({"message": "Backup file not found"}), 404
     
