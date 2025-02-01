@@ -1,17 +1,12 @@
 [
     {
-        "name": "Dariusz",
-        "surname": "Januszewski",
-        "pesel": "04282301111"
-    },
-    {
-        "name": "Natalia",
-        "surname": "Owsiejko",
+        "name": "Zbych",
+        "surname": "Zbyszkowy",
         "pesel": "12345678910"
     },
     {
-        "name": "Zygmunt",
-        "surname": "Waza",
-        "pesel": "12345678911"
+        "name": "Sigma",
+        "surname": "Boy",
+        "pesel": "10987654321"
     }
 ]
