@@ -1,8 +1,11 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/6O8lguVw)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=16444813&assignment_repo_type=AssignmentRepo)
-imie:
-Natalia
-nazwisko:
-Owsiejko
-grupa:
-3
+
+# Aplikacja bankowa napisana w Pythonie z wykorzystaniem podejścia **Test-Driven Development (TDD)**. Udostępnia REST API do zarządzania kontami osobistymi i firmowymi, realizowania przelewów, obsługi pożyczek oraz śledzenia historii operacji.
+
+## Testowanie
+
+Projekt zawiera zestaw testów:
+
+- **Jednostkowe** – walidacja kont, przelewy, pożyczki, e-maile  
+- **Integracyjne** – testy API i backupu  
+- **BDD (Gherkin)** – scenariusze zachowań użytkownika  
+- **Wydajnościowe** – testy przeciążeniowe i czasu odpowiedzi
